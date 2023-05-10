@@ -10,7 +10,7 @@ export const routes = async (app, client) => {
     //Get all books
     .get(async (req, res, next) => {
       const books = await db.collection('books').find({}).toArray()
-      res.send(books)
+      res.status(200).json(books)
     })
     //Add a book
     .post(async (req, res) => {
@@ -27,8 +27,17 @@ export const routes = async (app, client) => {
 
     //Edit a book
     .put(async (req, res) => {
-      const updatedBook = await db.collection('books').updateOne({ _id: new ObjectId(req.params.id) }, { $set: req.body })
-      res.status(200).json(updatedBook)
+      const id = req.params.id
+
+      try {
+        const confirmation = await db.collection('books').updateOne({ _id: new ObjectId(id) }, { $set: req.body })
+        if (confirmation.modifiedCount === 0) {
+          res.status(404).json({ message: `The ID ${id} does not exist.` })
+        }
+        res.status(200).json(confirmation)
+      } catch (e) {
+        res.status(400).json({ message: `Failed to update due to the following error: ${e}.` })
+      }
     })
 
     //Delete a book
@@ -40,7 +49,7 @@ export const routes = async (app, client) => {
         if (confirmation.deletedCount === 0) {
           res.status(404).json({ message: `The ID ${id} does not exist.` })
         }
-        res.status(200).json({ message: confirmation })
+        res.status(200).json(confirmation)
       } catch (e) {
         res.status(400).json({ message: `Failed to delete due to the following error: ${e}.` })
       }
