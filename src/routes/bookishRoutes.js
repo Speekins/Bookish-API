@@ -26,9 +26,10 @@ export const routes = async (app, client) => {
     })
 
     //Edit a book
-    .put((req, res) =>
-      res.send('PUT request successful!')
-    )
+    .put(async (req, res) => {
+      const updatedBook = await db.collection('books').updateOne({ _id: new ObjectId(req.params.id) }, { $set: req.body })
+      res.status(200).json(updatedBook)
+    })
 
     //Delete a book
     .delete(async (req, res) => {
