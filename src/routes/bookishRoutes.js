@@ -55,9 +55,21 @@ export const routes = async (app, client) => {
       }
     })
 
+  app.route('/searchbook/:genre')
+
+  .get(async (req, res) => {
+    let genre = req.params.genre
+
+    const booksData = await fetch(
+      `https://api.nytimes.com/svc/books/v3/lists/current/${genre}.json?api-key=${process.env.NYTIMES_API_KEY}`
+    )
+    const response = await booksData.json()
+    res.send(response)
+  })
+
   app.route('/searchbook/:date')
 
-    .get(async (req, res, next) => {
+    .get(async (req, res) => {
       let date = req.params.date
 
       const booksData = await fetch(
