@@ -3,14 +3,38 @@ dotenv.config()
 import { ObjectId } from 'mongodb'
 
 export const routes = async (app, client) => {
-  await client.connect()
-  const db = client.db('bookish-db')
+  const dbname = 'bookish-db'
+  const database = client.db(dbname)
+  const collection = database.collection('books')
 
+  // const connectToDatabase = async () => {
+  //   try {
+  //     await client.connect()
+  //     console.log(`Connected to the ${dbname} database!`)
+  //   } catch (err) {
+  //     console.log(`Error connecting to the database: ${err}`)
+  //   }
+  // }
+
+  // const main = async () => {
+  //   try {
+  //     await connectToDatabase()
+  //   } catch (err) {
+  //     console.log(`Error connecting to database: ${err}`)
+  //   } finally {
+  //     await client.close()
+  //   }
+  // }
+
+  // main()
+  
   app.route('/book')
     //Get all books
     .get(async (req, res, next) => {
-      const books = await db.collection('books').find({}).toArray()
-      res.status(200).json(books)
+      await client.connect()
+      const books = await collection.find({}).toArray()
+      //res.status(200).json(books)
+      res.status(200).send(books)
     })
     //Add a book
     .post(async (req, res) => {
