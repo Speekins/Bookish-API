@@ -21,13 +21,15 @@ export const routes = async (app, client) => {
   app.route('/book')
     //Get all books
     .get(async (req, res, next) => {
-      const books = await collection.find({}).toArray()
+      const books = await collection.find({ "isFavorite": "true" }).toArray()
       //res.status(200).json(books)
       res.status(200).send(books)
     })
     //Add a book
     .post(async (req, res) => {
-      const newId = await collection.insertOne(req.body)
+      let newBook = req.body
+      newBook = { ...newBook, "isFavorite": "true" }
+      const newId = await collection.insertOne(newBook)
       res.status(201).json(newId)
     })
 
