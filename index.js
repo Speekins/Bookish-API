@@ -7,7 +7,7 @@ const cors = require('cors')
 const uri = require ('./atlas_uri')
 
 const corsOptions = {
-  origin: ["http://localhost:3000/", "https://bookish-beta.vercel.app/"],
+  origin: ["http://localhost:3000/", "https://bookish-beta.vercel.app/", "https://merry-florentine-f454e0.netlify.app"],
   optionsSuccessStatus: 200
 }
 
