@@ -77,4 +77,63 @@ const books = [{
   title: "THE SUMMER HOUSE",
   updated_date: "2020-06-17 22:02:02",
   weeks_on_list: 1,
+},
+{
+  "rank": 1,
+  "rank_last_week": 0,
+  "weeks_on_list": 1,
+  "asterisk": 0,
+  "dagger": 0,
+  "primary_isbn10": "0063384205",
+  "primary_isbn13": "9780063384200",
+  "publisher": "Harper",
+  "description": "The 24th book in the Gabriel Allon series. Gabriel forges six impressionist canvases and enlists an unlikely team of operatives to go after a new foe.",
+  "price": "0.00",
+  "title": "A DEATH IN CORNWALL",
+  "author": "Daniel Silva",
+  "contributor": "by Daniel Silva",
+  "contributor_note": "",
+  "book_image": "https://storage.googleapis.com/du-prd/books/images/9780063384200.jpg",
+  "book_image_width": 331,
+  "book_image_height": 500,
+  "amazon_product_url": "https://www.amazon.com/dp/0063384205?tag=thenewyorktim-20",
+  "age_group": "",
+  "book_review_link": "",
+  "first_chapter_link": "",
+  "sunday_review_link": "",
+  "article_chapter_link": "",
+  "isbns": [
+    {
+      "isbn10": "0063384205",
+      "isbn13": "9780063384200"
+    },
+    {
+      "isbn10": "0063384248",
+      "isbn13": "9780063384248"
+    }
+  ],
+  "buy_links": [
+    {
+      "name": "Amazon",
+      "url": "https://www.amazon.com/dp/0063384205?tag=thenewyorktim-20"
+    },
+    {
+      "name": "Apple Books",
+      "url": "https://goto.applebooks.apple/9780063384200?at=10lIEQ"
+    },
+    {
+      "name": "Barnes and Noble",
+      "url": "https://www.anrdoezrs.net/click-7990613-11819508?url=https%3A%2F%2Fwww.barnesandnoble.com%2Fw%2F%3Fean%3D9780063384200"
+    },
+    {
+      "name": "Books-A-Million",
+      "url": "https://www.anrdoezrs.net/click-7990613-35140?url=https%3A%2F%2Fwww.booksamillion.com%2Fp%2FA%2BDEATH%2BIN%2BCORNWALL%2FDaniel%2BSilva%2F9780063384200"
+    },
+    {
+      "name": "Bookshop.org",
+      "url": "https://bookshop.org/a/3546/9780063384200"
+    }
+  ],
+  "book_uri": "nyt://book/15cc24d7-c007-5a71-ba3e-3fe5d9110668",
+  "isFavorite": "true"
 }]

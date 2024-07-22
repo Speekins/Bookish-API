@@ -2,51 +2,40 @@ import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-d
 dotenv.config()
 import { ObjectId } from 'mongodb'
 
+const connectToDatabase = async () => {
+  try {
+    await client.connect()
+    console.log(`Connected to the ${dbname} database!`)
+  } catch (err) {
+    console.log(`Error connecting to the database: ${err}`)
+  }
+}
+
 export const routes = async (app, client) => {
   const dbname = 'bookish-db'
   const database = client.db(dbname)
   const collection = database.collection('books')
 
-  // const connectToDatabase = async () => {
-  //   try {
-  //     await client.connect()
-  //     console.log(`Connected to the ${dbname} database!`)
-  //   } catch (err) {
-  //     console.log(`Error connecting to the database: ${err}`)
-  //   }
-  // }
+  await connectToDatabase()
 
-  // const main = async () => {
-  //   try {
-  //     await connectToDatabase()
-  //   } catch (err) {
-  //     console.log(`Error connecting to database: ${err}`)
-  //   } finally {
-  //     await client.close()
-  //   }
-  // }
-
-  // main()
-  
   app.route('/book')
     //Get all books
     .get(async (req, res, next) => {
-      await client.connect()
       const books = await collection.find({}).toArray()
       //res.status(200).json(books)
       res.status(200).send(books)
     })
     //Add a book
     .post(async (req, res) => {
-      const newId = await db.collection('books').insertOne(req.body)
+      const newId = await collection.insertOne(req.body)
       res.status(201).json(newId)
     })
 
   app.route('/book/:id')
     //Get an individual book
     .get(async (req, res) => {
-      const book = await db.collection('books').findOne({ _id: new ObjectId(req.params.id) })
-      res.send(book)
+      const book = await collection.findOne({ _id: new ObjectId(req.params.id) })
+      res.status(200).send(book)
     })
 
     //Edit a book
@@ -54,7 +43,7 @@ export const routes = async (app, client) => {
       const id = req.params.id
 
       try {
-        const confirmation = await db.collection('books').updateOne({ _id: new ObjectId(id) }, { $set: req.body })
+        const confirmation = await collection.updateOne({ _id: new ObjectId(id) }, { $set: req.body })
         if (confirmation.modifiedCount === 0) {
           res.status(404).json({ message: `The ID ${id} does not exist.` })
         }
@@ -69,7 +58,7 @@ export const routes = async (app, client) => {
       const id = req.params.id
 
       try {
-        const confirmation = await db.collection('books').deleteOne({ _id: new ObjectId(req.params.id) })
+        const confirmation = await collection.deleteOne({ _id: new ObjectId(req.params.id) })
         if (confirmation.deletedCount === 0) {
           res.status(404).json({ message: `The ID ${id} does not exist.` })
         }
@@ -80,21 +69,21 @@ export const routes = async (app, client) => {
     })
 
   app.route('/searchbook/:genre')
+    //ex: hardcover-fiction
+    .get(async (req, res) => {
+      let genre = req.params.genre
+      const booksData = await fetch(
+        `https://api.nytimes.com/svc/books/v3/lists/current/${genre}.json?api-key=${process.env.NYTIMES_API_KEY}`
+      )
+      const response = await booksData.json()
+      res.send(response)
+    })
 
-  .get(async (req, res) => {
-    let genre = req.params.genre
-
-    const booksData = await fetch(
-      `https://api.nytimes.com/svc/books/v3/lists/current/${genre}.json?api-key=${process.env.NYTIMES_API_KEY}`
-    )
-    const response = await booksData.json()
-    res.send(response)
-  })
-
-  app.route('/searchbook/:date')
-
+  app.route('/searchbook/:date/:genre')
+    //lists/2019-01-20/trade-fiction-paperback.json?api-key={APIKEY}
     .get(async (req, res) => {
       let date = req.params.date
+      let genre = req.params.genre
 
       const booksData = await fetch(
         `https://api.nytimes.com/svc/books/v3/lists/overview.json?published_date=${date}&api-key=${process.env.NYTIMES_API_KEY}`
