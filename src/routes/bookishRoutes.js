@@ -2,19 +2,19 @@ import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-d
 dotenv.config()
 import { ObjectId } from 'mongodb'
 
-const connectToDatabase = async () => {
-  try {
-    await client.connect()
-    console.log(`Connected to the ${dbname} database!`)
-  } catch (err) {
-    console.log(`Error connecting to the database: ${err}`)
-  }
-}
-
 export const routes = async (app, client) => {
   const dbname = 'bookish-db'
   const database = client.db(dbname)
   const collection = database.collection('books')
+
+  const connectToDatabase = async () => {
+    try {
+      await client.connect()
+      console.log(`Connected to the ${dbname} database!`)
+    } catch (err) {
+      console.log(`Error connecting to the database: ${err}`)
+    }
+  }
 
   await connectToDatabase()
 
@@ -48,8 +48,9 @@ export const routes = async (app, client) => {
         const confirmation = await collection.updateOne({ _id: new ObjectId(id) }, { $set: req.body })
         if (confirmation.modifiedCount === 0) {
           res.status(404).json({ message: `The ID ${id} does not exist.` })
+        } else {
+          res.status(200).json(confirmation)
         }
-        res.status(200).json(confirmation)
       } catch (e) {
         res.status(400).json({ message: `Failed to update due to the following error: ${e}.` })
       }
