@@ -18,6 +18,18 @@ export const routes = async (app, client) => {
 
   await connectToDatabase()
 
+  app.route('/bookids')
+    //Get all book ids and isbns
+    //"_id": "66d79deea11f45a60760e601"
+    .get(async (req, res) => {
+      try {
+        const ids = await collection.findOne({ "id": "XX123456789XX" })
+        res.status(200).send(ids)
+      } catch (error) {
+        res.status(404).send(error)
+      }
+    })
+
   app.route('/book')
     //Get all books
     .get(async (req, res, next) => {
